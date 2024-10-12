@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import Input from "./Input";
+import { createPet } from "../API/pets";
 
 const Modal = ({ show, setShowModal }) => {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [image, setImage] = useState("");
+  const [adopted, setAdopted] = useState(false);
   const [available, setAvailable] = useState(0);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const petData = { name, image, type, adopted };
+      await createPet(petData);
+      setShowModal(false);
+      // Optionally, you can add some feedback to the user here (e.g., a success message)
+    } catch (error) {
+      console.error("Error adding pet:", error);
+      // Optionally, you can add some error feedback to the user here
+    }
+  };
   if (!show) return "";
+
   return (
     <div
       className="inset-0 fixed  flex justify-center items-center flex-col z-20 overflow-hidden 
@@ -47,7 +62,11 @@ const Modal = ({ show, setShowModal }) => {
           }}
         />
 
-        <button className="w-[70px] border border-black rounded-md ml-auto mr-5 hover:bg-green-400">
+        <button
+          type="submit"
+          className="w-[70px] border border-black rounded-md ml-auto mr-5 hover:bg-green-400"
+          onClick={handleSubmit}
+        >
           Submit
         </button>
       </div>
